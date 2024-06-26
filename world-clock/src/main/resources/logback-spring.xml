@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DOCUMENTATION: http://logback.qos.ch/manual/configuration.html -->
+<configuration debug="false" scan="true">
+
+    <!-- ### MAIN LOGGING CONFIGURATION ### The order of the elements in this file is mandatory! -->
+
+    <!-- ### PROPERTIES ################################################################ -->
+
+    <springProperty name="dynamicContextName" source="wold.clock.logging.contextName" />
+    <property name="contextName" value="${dynamicContextName:-/}" />
+    <property name="LOG_LEVEL_PATTERN" value="-%5p" />
+    <!-- Console -->
+    <property name="CONSOLE_LOG_PATTERN" value="%date{HH:mm:ss.SSS} %clr(${LOG_LEVEL_PATTERN}) %clr(%logger{0}){cyan}%clr(:){faint} %m%n" />
+    <!-- Files -->
+    <property name="FILE_LOG_PATTERN" value="%date{ISO8601} ${LOG_LEVEL_PATTERN} [%t] %logger{0} : %m%n" />
+    <property name="LOG_PATH" value="${java.io.tmpdir}/clock-api/" />
+    <property name="LOG_PATH_ARCHIVES" value="${LOG_PATH}/old/" />
+    <property name="LOG_PATH_CONTEXT_NAME" value="${contextName}/" />
+    <property name="LOG_FILE_MAX_HISTORY" value="7" /> <!-- new file every day, for 'n' days -->
+    <!-- Files: File names -->
+    <property name="LOG_FILE_NAME_DEFAULT" value="clock-api" />
+
+    <!-- BASE FILES (conventions taken from Spring Boot) -->
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <!-- ### PROFILES / STAGES ######################################################### -->
+
+    <!-- 'default' (if no profile was set) -->
+    <springProfile name="default">
+        <logger name="world.clock" level="INFO" />
+    </springProfile>
+
+    <!-- ### LOG FILES ################################################### -->
+
+    <!-- Default log file: consumes all application logging (but the non-cumulative ones, see `additivity="false"` below.) -->
+
+    <appender name="DEFAULT-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <file>${LOG_PATH}/${LOG_PATH_CONTEXT_NAME}/${LOG_FILE_NAME_DEFAULT}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH_ARCHIVES}/${LOG_PATH_CONTEXT_NAME}/${LOG_FILE_NAME_DEFAULT}.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>${LOG_FILE_MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+
+    <!-- ### DEFAULT LOG LEVELS ################################################## -->
+
+    <!-- Overall Logger (set the logging level for all Api classes and(!) its dependencies) -->
+    <root level="WARN">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="DEFAULT-FILE" />
+    </root>
+
+    <!-- Special Loggers (these should always log, dont comment-out!) -->
+
+    <!-- Always-Logger (level must be 'TRACE') -->
+    <logger name="WORLD-CLOCK" level="TRACE" />
+
+    <!-- Constructor-logger -->
+    <logger name="WORLD_CLOCK_DI_CONST" level="TRACE" />
+
+    <!-- These should be printed at startup and at shutdown (level must be 'INFO') -->
+    <logger name="world.clock.Application" level="INFO" />
+
+</configuration>

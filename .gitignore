@@ -1,0 +1,10 @@
+terraform/.terraform*
+terraform/.state.conf
+world-clock/.idea
+world-clock/target
+*-kubeconfig
+world-clock/src/main/resources/.DS_Store
+world-clock/src/main/.DS_Store
+world-clock/src/.DS_Store
+world-clock/.DS_Store
+.DS_Store
