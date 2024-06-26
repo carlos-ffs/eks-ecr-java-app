@@ -1,4 +1,4 @@
-# Assignment to create an EKS, ECR repository, and deploy a Java web application with a helm chart to the newly created EKS using the ECR repository
+# Assignment to create an EKS, ECR repository, and deploy a Java web application using a Helm chart onto the newly created EKS cluster via the ECR repository.
 
 This assignment as the following Objectives:
 
