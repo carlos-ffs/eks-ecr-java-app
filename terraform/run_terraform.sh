@@ -84,7 +84,7 @@ s3_bucket_info () {
     BUCKET_REGION=$(aws s3api get-bucket-location --bucket "$BUCKET_NAME" --query "LocationConstraint" --output text)
 
     if [ "$BUCKET_REGION" == "None" ] || [ -z "$BUCKET_REGION" ]; then
-    BUCKET_REGION="us-east-2" # sets default to us-east-2 (london)
+      BUCKET_REGION="eu-west-2" # sets default to eu-west-2 (london)
     fi
 }
 
